@@ -12,14 +12,14 @@ const createNotification = ({title = '', message = '', time = 3}) => {
     }
 
     notifications = [...notifications, newNotification]
-
     key++
-
     update()
 
-    setTimeout(() => {
-        removeNotification(newNotification.key)
-    }, time * 1000);
+    if (time > 0) {
+        setTimeout(() => {
+            removeNotification(newNotification.key)
+        }, time * 1000);
+    }
 }
 
 const removeNotification = (key) => {
