@@ -17,14 +17,18 @@ const createNotification = ({title = '', message = '', time = 3}) => {
 
     update()
 
-    const idTimer = setTimeout(() => {
+    setTimeout(() => {
         removeNotification(newNotification.key)
     }, time * 1000);
 }
 
 const removeNotification = (key) => {
-    notifications = notifications.filter(item => item.key !== key)
-    update()
+    const $block = $notifications.querySelector(`.notifications__block[key="${key}"]`)
+    $block.style.animation = 'fadeOut .2s linear'
+    setTimeout(() => {
+        notifications = notifications.filter(item => item.key !== key)
+        update()
+    }, 150)
 }
 
 const update = () => {
