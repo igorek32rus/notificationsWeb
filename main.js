@@ -4,13 +4,26 @@ let notifications = []
 
 let key = 1
 
-const createNotification = ({title = '', message = ''}) => {
-    notifications = [...notifications, {
-        key: key++,
+const createNotification = ({title = '', message = '', time = 3}) => {
+    const newNotification = {
+        key,
         title,
         message
-    }]
+    }
 
+    notifications = [...notifications, newNotification]
+
+    key++
+
+    update()
+
+    const idTimer = setTimeout(() => {
+        removeNotification(newNotification.key)
+    }, time * 1000);
+}
+
+const removeNotification = (key) => {
+    notifications = notifications.filter(item => item.key !== key)
     update()
 }
 
@@ -23,15 +36,15 @@ const update = () => {
     $blocks.forEach(item => {
         const key = item.getAttribute('key')
         keys.push(parseInt(key, 10))
-        const notify = notifications.find(notifyItem => notifyItem.key == key)
+        const notify = notifications.find(notifyItem => notifyItem.key === parseInt(key, 10))
 
         if (!notify) {
-            forRemove.push(key)
+            forRemove.push(parseInt(key, 10))
         }
     })
 
     notifications.map(item => {
-        if (keys.indexOf(item.key) < 0) {
+        if (keys.indexOf(item.key) === -1) {
             const html = `
                 <div class="notifications__block" key="${item.key}">
                     <span class="title">${item.title}</span>
@@ -45,7 +58,7 @@ const update = () => {
 
     for (let i = 0; i < $blocks.length; i++) {
         const key = $blocks[i].getAttribute('key');
-        if (forRemove.indexOf(key) > 0) {
+        if (forRemove.indexOf(parseInt(key, 10)) > -1) {
             $blocks[i].remove()
         }
     }
